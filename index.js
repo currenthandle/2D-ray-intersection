@@ -10,7 +10,6 @@ var PI = Math.PI,
 // rounds first argument to order of second argument
 function round(number, toNearest){
     var rounded = Math.round(toNearest * number) / toNearest;
-    console.log('rounded', rounded);
     return rounded;
 };
 
