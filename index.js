@@ -1,110 +1,127 @@
-var sin = Math.sin;
-var cos = Math.cos;
-var PI = Math.PI;
+// short hand for mathematical operators and constants
+var PI = Math.PI,
+    sin = Math.sin,
+    cos = Math.cos,
+    atan = Math.atan,
+    sqrt = Math.sqrt,
+    pow = Math.pow,
+    abs = Math.abs;
 
+// rounds first argument to order of second argument
 function round(number, toNearest){
     var rounded = Math.round(toNearest * number) / toNearest;
     console.log('rounded', rounded);
     return rounded;
 };
 
+// A class for creating sensors
 function Sensor(radius, theta, offset, response) {
+    // the angle that cooresponds to the direction vector is the inital offset plus the response angle measured by the sensor
     var phi = offset + response;
   
+    // convert radius and theta into cartesian coordinates of the source vector
 	this.xOfSource = radius * round(cos(theta), 1e3);
 	this.yOfSource = radius * round(sin(theta), 1e3);
 
+    // convert radius and theta into cartesian coordinates of the direction vector
 	this.xOfDirection = round(cos(phi), 1e3);
 	this.yOfDirection = round(sin(phi), 1e3);
 };
 
-
+// create our 2 sensors
 var sensor1 = new Sensor(3, 0, 0, 3*PI/4);
 var sensor2 = new Sensor(3, PI, 0, PI/4);
 
-console.log('sensor1.xOfSource', sensor1.xOfSource)
-console.log('sensor1.yOfSource', sensor1.yOfSource)
-console.log('sensor2.xOfSource', sensor2.xOfSource)
-console.log('sensor2.yOfSource', sensor2.yOfSource)
-console.log('sensor1.xOfDirection', sensor1.xOfDirection)
-console.log('sensor1.yOfDirection', sensor1.yOfDirection)
-console.log('sensor2.xOfDirection', sensor2.xOfDirection)
-console.log('sensor2.yOfDirection', sensor2.yOfDirection)
-
+// difference between our two sensor locations
 var dx = sensor2.xOfSource - sensor1.xOfSource;
 var dy = sensor2.yOfSource - sensor1.yOfSource;
-console.log('dx', dx)
-console.log('dy', dy)
 
+// determinate
 var det = (sensor2.xOfDirection * sensor1.yOfDirection) - (sensor2.yOfDirection * sensor1.xOfDirection);
 det = round(det, 1e6);
-console.log('det',det);
 
+// mag factors for the direction vectors
 var u = ((dy * sensor2.xOfDirection) - (dx * sensor2.yOfDirection)) / det;
 var v = ((dy * sensor1.xOfDirection) - (dx * sensor1.yOfDirection)) / det;
-console.log('u',u);
 
+// cartesian coordiantes of the intersection
 var pXA = sensor1.xOfSource + sensor1.xOfDirection * u;
 var pXB = sensor2.xOfSource + sensor2.xOfDirection * v;
-
 var pYA = sensor1.yOfSource + sensor1.yOfDirection * u;
 var pYB = sensor2.yOfSource + sensor2.yOfDirection * v;
 
-console.log('pXA', pXA);
-console.log('pXB', pXB);
-console.log('pYA', pYA);
-console.log('pYB', pYB);
+// test that the two values for x & y of the intersection are the same (within a certain threshold)
+(function coordinatesAgree() {
+    var threshold = 1e-4;
+    (function testXOfP(){
+        if (abs(pXB - pXA) <= threshold) console.log('x coordinates agree');
+        else console.error('x coordinates disagree');
+    })();
+    (function testYOfP(){
+        if (abs(pYB - pYA) <= threshold) console.log('y coordinates agree');
+        else console.error('y coordinates disagree');
+    })();
+})();
 
-var d = document;
-var body = d.body;
+// returns the average of the two inputs
+function avg(a, b) { return (a + b) / 2; };
 
-/*
-var sensor1Div = d.createElement('div');
-sensor1Div.style.width = '1rem';
-sensor1Div.style.height = '1.5rem';
-sensor1Div.style.backgroundColor = 'green';
-sensor1Div.style.position = 'absolute';
-sensor1Div.style.x = sensor1.xOfSensor;
-sensor1Div.style.y = sensor1.yOfSensor;
+var pX = avg(pXA, pXB);
+var pY = avg(pYA, pYB);
 
-body.appendChild(sensor1Div);
-*/
+// convert cartesian coordinates of intersection to polar coordinated
+var pointRadius = sqrt(pow(pX,2) + pow(pY, 2));
+var pointTheta = atan(pY / pX);
+(function renderResults() {
+        // short hand for document and document.body
+        var d = document;
+        var body = d.body;
 
-console.log('body', body)
+        /* RADIUS */
+        // establishing an element for everything pertaining to radius
+        var rContainer = d.createElement('div');
+        rContainer.className = 'rContainer';
 
-var pointRadius = Math.sqrt(Math.pow(pXA,2)+Math.pow(pYA, 2));
-var pointTheta = Math.atan( pYA / pXA);
+        // creating an element to hold the radius value
+        var pointRDiv = d.createElement('div');
+        pointRDiv.id = 'pointR';
+        // setting the contents of this element to be the value calculated for the radius of the intersection point
+        pointRDiv.innerHTML = pointRadius;
 
-var rContainer = d.createElement('div');
-rContainer.className = 'rContainer';
-var pointRDiv = d.createElement('div');
-pointRDiv.id = 'pointR';
-pointRDiv.innerHTML = pointRadius;
-var rLabel = d.createElement('label');
-rLabel.htmlFor = 'pointR';
-rLabel.innerHTML = 'r';
+        // creating an element for the radius label
+        var rLabel = d.createElement('label');
+        rLabel.htmlFor = 'pointR';
+        rLabel.innerHTML = 'r';
+        
+        // adding label element to container div
+        rContainer.appendChild(rLabel);
+        // adding radius element to container div
+        rContainer.appendChild(pointRDiv);
 
-rContainer.appendChild(rLabel);
-rContainer.appendChild(pointRDiv);
+        /* THETA */
+        // establishing an element for everything pertaining to theta
+        var thetaContainer = d.createElement('div');
+        thetaContainer.className = 'thetaContainer';
 
-var thetaContainer = d.createElement('div');
-thetaContainer.className = 'thetaContainer';
-console.log('thetaContainer', thetaContainer);
+        // creating an element to hold the theta value
+        var pointThetaDiv = d.createElement('div');
+        pointThetaDiv.id = 'pointTheta';
+        // setting the contents of this element to be the value calculated for the theta of the intersection point
+        pointThetaDiv.innerHTML = pointTheta;
 
-var pointThetaDiv = d.createElement('div');
-pointThetaDiv.id = 'pointTheta';
-pointThetaDiv.innerHTML = pointTheta;
-console.log('pointThetaDiv', pointThetaDiv);
+        // creating an element for the theta label
+        var thetaLabel = d.createElement('label');
+        thetaLabel.htmlFor = 'pointTheta';
+        thetaLabel.innerHTML = 'theta';
 
-var thetaLabel = d.createElement('label');
-thetaLabel.htmlFor = 'pointTheta';
-thetaLabel.innerHTML = 'theta';
+        // adding label element to container div
+        thetaContainer.appendChild(thetaLabel);
+        // adding radius element to container div
+        thetaContainer.appendChild(pointThetaDiv);
 
-thetaContainer.appendChild(thetaLabel);
-thetaContainer.appendChild(pointThetaDiv);
-
-console.log('tC',thetaContainer)
-
-body.appendChild(rContainer);
-body.appendChild(thetaContainer);
+        // adding radius container element to the document body
+        body.appendChild(rContainer);
+        // adding theta container element to the document body
+        body.appendChild(thetaContainer);
+ })()
 
