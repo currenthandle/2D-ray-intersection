@@ -69,3 +69,15 @@ sensor1Div.style.y = sensor1.yOfSensor;
 body.appendChild(sensor1Div);
 console.log('body', body)
 
+var pointRadius = Math.sqrt(Math.pow(pXA,2)+Math.pow(pYA, 2));
+var pointTheta = Math.atan( pYA / pXA);
+
+var rContainer = d.createElement('div');
+rContainer.innerHTML = pointRadius;
+
+var thetaContainer = d.createElement('div');
+thetaContainer.innerHTML = pointTheta;
+console.log('tC',thetaContainer)
+body.appendChild(rContainer);
+body.appendChild(thetaContainer);
+
