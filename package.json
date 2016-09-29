@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "css": "node-sass index.scss -o public",
-    "css-w": "node-sass index.scss -w -o public",
+    "css": "node-sass index.scss -o style",
+    "css-w": "node-sass index.scss -w -o style",
     "dev": "parallelshell 'npm run css-w'"
   },
   "author": "",
