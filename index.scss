@@ -1,0 +1,20 @@
+.input-label-container {
+    & > div {
+        display: inline-block;
+        width: 24%;
+        color: blue;
+    }
+}
+
+.sensor-label-container {
+    width: 17%;
+    display: inline-block;
+}
+
+form {
+    padding: 0;
+    input{
+        margin: 0;
+        width: 20%;
+    }
+}

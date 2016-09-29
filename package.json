@@ -4,8 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "css": "node-sass index.scss -o public",
+    "css-w": "node-sass index.scss -w -o public",
+    "dev": "parallelshell 'npm run css-w'"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "node-sass": "^3.10.0",
+    "nodemon": "^1.10.2",
+    "parallelshell": "^2.0.0"
+  }
 }
