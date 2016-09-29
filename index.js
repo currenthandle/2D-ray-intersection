@@ -20,7 +20,7 @@ function Sensor(radius, theta, offset, response) {
 
 
 var sensor1 = new Sensor(3, 0, 0, 3*PI/4);
-var sensor2 = new Sensor(1.2, PI, 0, PI/4);
+var sensor2 = new Sensor(3, PI, 0, PI/4);
 
 console.log('sensor1.xOfSource', sensor1.xOfSource)
 console.log('sensor1.yOfSource', sensor1.yOfSource)
@@ -58,6 +58,7 @@ console.log('pYB', pYB);
 var d = document;
 var body = d.body;
 
+/*
 var sensor1Div = d.createElement('div');
 sensor1Div.style.width = '1rem';
 sensor1Div.style.height = '1.5rem';
@@ -67,17 +68,43 @@ sensor1Div.style.x = sensor1.xOfSensor;
 sensor1Div.style.y = sensor1.yOfSensor;
 
 body.appendChild(sensor1Div);
+*/
+
 console.log('body', body)
 
 var pointRadius = Math.sqrt(Math.pow(pXA,2)+Math.pow(pYA, 2));
 var pointTheta = Math.atan( pYA / pXA);
 
 var rContainer = d.createElement('div');
-rContainer.innerHTML = pointRadius;
+rContainer.className = 'rContainer';
+var pointRDiv = d.createElement('div');
+pointRDiv.id = 'pointR';
+pointRDiv.innerHTML = pointRadius;
+var rLabel = d.createElement('label');
+rLabel.htmlFor = 'pointR';
+rLabel.innerHTML = 'r';
+
+rContainer.appendChild(rLabel);
+rContainer.appendChild(pointRDiv);
 
 var thetaContainer = d.createElement('div');
-thetaContainer.innerHTML = pointTheta;
+thetaContainer.className = 'thetaContainer';
+console.log('thetaContainer', thetaContainer);
+
+var pointThetaDiv = d.createElement('div');
+pointThetaDiv.id = 'pointTheta';
+pointThetaDiv.innerHTML = pointTheta;
+console.log('pointThetaDiv', pointThetaDiv);
+
+var thetaLabel = d.createElement('label');
+thetaLabel.htmlFor = 'pointTheta';
+thetaLabel.innerHTML = 'theta';
+
+thetaContainer.appendChild(thetaLabel);
+thetaContainer.appendChild(pointThetaDiv);
+
 console.log('tC',thetaContainer)
+
 body.appendChild(rContainer);
 body.appendChild(thetaContainer);
 
